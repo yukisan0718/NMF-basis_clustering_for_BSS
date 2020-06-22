@@ -254,23 +254,26 @@ def get_NMF(Y, num_iter, num_base, loss_func, alpha, norm_H):
 ### Function for plotting Spectrogram and loss curve ###
 def display_graph(Y, X, times, freqs, loss_func, num_iter):
     
-    #Plot the loss curve
+    #Plot the original spectrogram
     plt.rcParams["font.size"] = 16
     plt.figure(figsize=(18, 6))
     plt.subplot(1, 2, 1)
     plt.title('An original spectrogram')
     plt.xlabel('Time [sec]')
     plt.ylabel('Frequency [Hz]')
-    plt.pcolormesh(times, freqs, 10*np.log10(np.abs(Y)), cmap='jet')
+    Y = 10*np.log10(np.abs(Y))
+    plt.pcolormesh(times, freqs, Y, cmap='jet')
     plt.colorbar(orientation='horizontal').set_label('Power')
     plt.savefig("./log/original_spec.png", dpi=200)
     
+    #Plot the approximated spectrogram
     plt.subplot(1, 2, 2)
     plt.title('The spectrogram approximated by NMF')
     plt.xlabel('Time [sec]')
     plt.ylabel('Frequency [Hz]')
-    plt.pcolormesh(times, freqs, 10*np.log10(np.abs(X)), cmap='jet')
-    plt.colorbar(orientation='horizontal').set_label('Power')
+    X = 10*np.log10(np.abs(X))
+    cm = plt.pcolormesh(times, freqs, X, cmap='jet', vmin=np.min(Y), vmax=np.max(Y))
+    plt.colorbar(cm, orientation='horizontal').set_label('Power')
     plt.savefig("./log/reconstructed_spec.png", dpi=200)
     
     #Plot the loss curve
